@@ -16,6 +16,7 @@ void recorrerTarea(Tarea**, int);
 void checkTarea(Tarea**, Tarea**, int);
 void mostrarTareas(Tarea*);
 Tarea* carga(int);
+Tarea* buscarTareaID(Tarea**, int);
 Tarea buscarTareaPalabra(Tarea**, int);
 
 
@@ -23,7 +24,7 @@ int main() {
 
 	srand(time(NULL));
 
-	Tarea** tareasPendientes, ** tareasRealizadas;
+	Tarea** tareasPendientes, ** tareasRealizadas, * tareaBuscada, tareaBuscadaPal;
 	int cantidadTareas;
 
 	printf("Ingrese la cantidad de tareas: ");
@@ -32,10 +33,17 @@ int main() {
 
 	tareasRealizadas = (Tarea**)malloc(sizeof(Tarea*) * cantidadTareas);
 	tareasPendientes = (Tarea**)malloc(sizeof(Tarea*) * cantidadTareas);
-	
+	tareaBuscada = (Tarea*)malloc(sizeof(Tarea*));
 
 
 	recorrerTarea(tareasPendientes, cantidadTareas);
+
+	tareaBuscada = buscarTareaID(tareasPendientes, cantidadTareas);
+	mostrarTareas(tareaBuscada);
+
+	tareaBuscadaPal = buscarTareaPalabra(tareasPendientes, cantidadTareas);
+
+
 	checkTarea(tareasPendientes, tareasRealizadas, cantidadTareas);
 
 	printf("\n\n--------TAREAS PENDIENTES---------");
@@ -136,6 +144,24 @@ void mostrarTareas(Tarea* tareas) {
 	printf("\nDuraci�n de tarea: %d", tareas->Duracion);
 
 	return;
+}
+
+Tarea* buscarTareaID(Tarea** tareas, int cantidad) {
+
+	int searchId;
+
+	printf("Ingrese el ID de la tarea que está buscando: ");
+	scanf_s("%d", &searchId);
+
+	if (searchId >= cantidad || searchId < 1) {
+
+		printf("El ID buscado no pertenece a ninguna tarea.");
+		buscarTareaID(tareas, cantidad);
+
+	}
+
+
+	return *(tareas + (searchId - 1));
 }
 
 Tarea buscarTareaPalabra(Tarea** tareas, int cantidad) {
