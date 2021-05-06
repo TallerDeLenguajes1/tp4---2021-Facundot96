@@ -9,20 +9,21 @@
 typedef struct Tarea {
 	int TareaID; //Numerado en ciclo iterativo
 	char* Descripcion; //
-	int Duracion; // entre 10 – 100
+	int Duracion; // entre 10 � 100
 }Tarea;
 
 void recorrerTarea(Tarea**, int);
 void checkTarea(Tarea**, Tarea**, int);
-void mostrarTareas(Tarea *);
+void mostrarTareas(Tarea*);
 Tarea* carga(int);
-Tarea* buscarTareaID(Tarea**, int);
+Tarea buscarTareaPalabra(Tarea**, int);
+
 
 int main() {
 
 	srand(time(NULL));
 
-	Tarea** tareasPendientes, ** tareasRealizadas, * tareaBuscada;
+	Tarea** tareasPendientes, ** tareasRealizadas;
 	int cantidadTareas;
 
 	printf("Ingrese la cantidad de tareas: ");
@@ -31,23 +32,17 @@ int main() {
 
 	tareasRealizadas = (Tarea**)malloc(sizeof(Tarea*) * cantidadTareas);
 	tareasPendientes = (Tarea**)malloc(sizeof(Tarea*) * cantidadTareas);
-	tareaBuscada = (Tarea*)malloc(sizeof(Tarea*));
+	
+
 
 	recorrerTarea(tareasPendientes, cantidadTareas);
-
-	tareaBuscada = buscarTareaID(tareasPendientes, cantidadTareas);
-	mostrarTareas(tareaBuscada);
-
-
-
-
 	checkTarea(tareasPendientes, tareasRealizadas, cantidadTareas);
 
 	printf("\n\n--------TAREAS PENDIENTES---------");
 	for (int i = 0; i < cantidadTareas; i++)
 	{
 
-		if (*(tareasPendientes+i) != NULL)
+		if (*(tareasPendientes + i) != NULL)
 		{
 			mostrarTareas(*(tareasPendientes + i));
 		}
@@ -84,8 +79,8 @@ Tarea* carga(int i) {
 
 	char nombreTarea[50];
 	Tarea* aux = (Tarea*)malloc(sizeof(Tarea));
-	
-	
+
+
 	printf("Ingresar la tarea a realizar: ");
 	scanf(" %s", &nombreTarea);
 	aux->TareaID = i + 1;
@@ -109,7 +104,7 @@ void checkTarea(Tarea** tareas, Tarea** tareasCompletadas, int cantidad) {
 
 		while (bandera == 0)
 		{
-			printf("\n¿La tarea %s se completó? S/N:", tareas[i]->Descripcion);
+			printf("\n�La tarea %s se complet�? S/N:", tareas[i]->Descripcion);
 			scanf(" %c", &check);
 			check = tolower(check);
 
@@ -126,7 +121,7 @@ void checkTarea(Tarea** tareas, Tarea** tareasCompletadas, int cantidad) {
 				bandera++;
 			}
 			else {
-				printf("\nERROR. Ingrese un parámetro válido");
+				printf("\nERROR. Ingrese un par�metro v�lido");
 			}
 		}
 	}
@@ -137,26 +132,36 @@ void checkTarea(Tarea** tareas, Tarea** tareasCompletadas, int cantidad) {
 void mostrarTareas(Tarea* tareas) {
 
 	printf("\n\nID de Tarea: %d", tareas->TareaID);
-	printf("\nDescripción de tarea: %s", tareas->Descripcion);
-	printf("\nDuración de tarea: %d", tareas->Duracion);
+	printf("\nDescripci�n de tarea: %s", tareas->Descripcion);
+	printf("\nDuraci�n de tarea: %d", tareas->Duracion);
 
 	return;
 }
 
-Tarea* buscarTareaID(Tarea** tareas, int cantidad) {
+Tarea buscarTareaPalabra(Tarea** tareas, int cantidad) {
 
-	int searchId;
+	char buscarPal[50];
+	char* palabraClave;
 
-	printf("Ingrese el ID de la tarea que está buscando: ");
-	scanf_s("%d", &searchId);
+	printf("Ingresar la descripción de la tarea a buscar: ");
+	scanf(" %s", &buscarPal);
 
-	if (searchId >= cantidad || searchId < 1) {
 
-		printf("El ID buscado no pertenece a ninguna tarea.");
-		buscarTareaID(tareas, cantidad);
-
+	for (int indice = 0; buscarPal[indice] != '\0'; ++indice) {
+		buscarPal[indice] = tolower(buscarPal[indice]);
 	}
 
+	for (int i = 0; i < cantidad; i++)
+	{
+		if (tareas[i] != NULL && strstr(tareas[i]->Descripcion, buscarPal))
+		{
+			printf("\n\nID de Tarea: %d", tareas[i]->TareaID);
+			printf("\nDescripci�n de tarea: %s", tareas[i]->Descripcion);
+			printf("\nDuraci�n de tarea: %d", tareas[i]->Duracion);
+			return **(tareas + i);
+		}
+	}
 
-	return *(tareas + (searchId - 1));
+	printf("No se encontraron resultados");
+	return;
 }
