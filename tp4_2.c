@@ -153,6 +153,7 @@ Tarea* buscarTareaID(Tarea** tareas, int cantidad) {
 	if (searchId >= cantidad || searchId < 1) {
 
 		printf("El ID buscado no pertenece a ninguna tarea.");
+		buscarTareaID(tareas, cantidad);
 
 	}
 
