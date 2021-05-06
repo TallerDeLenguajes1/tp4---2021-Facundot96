@@ -9,20 +9,20 @@
 typedef struct Tarea {
 	int TareaID; //Numerado en ciclo iterativo
 	char* Descripcion; //
-	int Duracion; // entre 10 – 100
+	int Duracion; // entre 10 â€“ 100
 }Tarea;
 
 void recorrerTarea(Tarea**, int);
 void checkTarea(Tarea**, Tarea**, int);
 void mostrarTareas(Tarea *);
 Tarea* carga(int);
-
+Tarea* buscarTareaID(Tarea**, int);
 
 int main() {
 
 	srand(time(NULL));
 
-	Tarea** tareasPendientes, ** tareasRealizadas;
+	Tarea** tareasPendientes, ** tareasRealizadas, * tareaBuscada;
 	int cantidadTareas;
 
 	printf("Ingrese la cantidad de tareas: ");
@@ -31,8 +31,16 @@ int main() {
 
 	tareasRealizadas = (Tarea**)malloc(sizeof(Tarea*) * cantidadTareas);
 	tareasPendientes = (Tarea**)malloc(sizeof(Tarea*) * cantidadTareas);
+	tareaBuscada = (Tarea*)malloc(sizeof(Tarea*));
 
 	recorrerTarea(tareasPendientes, cantidadTareas);
+
+	tareaBuscada = buscarTareaID(tareasPendientes, cantidadTareas);
+	mostrarTareas(tareaBuscada);
+
+
+
+
 	checkTarea(tareasPendientes, tareasRealizadas, cantidadTareas);
 
 	printf("\n\n--------TAREAS PENDIENTES---------");
@@ -101,7 +109,7 @@ void checkTarea(Tarea** tareas, Tarea** tareasCompletadas, int cantidad) {
 
 		while (bandera == 0)
 		{
-			printf("\n¿La tarea %s se completó? S/N:", tareas[i]->Descripcion);
+			printf("\nÂ¿La tarea %s se completÃ³? S/N:", tareas[i]->Descripcion);
 			scanf(" %c", &check);
 			check = tolower(check);
 
@@ -118,7 +126,7 @@ void checkTarea(Tarea** tareas, Tarea** tareasCompletadas, int cantidad) {
 				bandera++;
 			}
 			else {
-				printf("\nERROR. Ingrese un parámetro válido");
+				printf("\nERROR. Ingrese un parÃ¡metro vÃ¡lido");
 			}
 		}
 	}
@@ -129,8 +137,26 @@ void checkTarea(Tarea** tareas, Tarea** tareasCompletadas, int cantidad) {
 void mostrarTareas(Tarea* tareas) {
 
 	printf("\n\nID de Tarea: %d", tareas->TareaID);
-	printf("\nDescripción de tarea: %s", tareas->Descripcion);
-	printf("\nDuración de tarea: %d", tareas->Duracion);
+	printf("\nDescripciÃ³n de tarea: %s", tareas->Descripcion);
+	printf("\nDuraciÃ³n de tarea: %d", tareas->Duracion);
 
 	return;
+}
+
+Tarea* buscarTareaID(Tarea** tareas, int cantidad) {
+
+	int searchId;
+
+	printf("Ingrese el ID de la tarea que estÃ¡ buscando: ");
+	scanf_s("%d", &searchId);
+
+	if (searchId >= cantidad || searchId < 1) {
+
+		printf("El ID buscado no pertenece a ninguna tarea.");
+		buscarTareaID(tareas, cantidad);
+
+	}
+
+
+	return *(tareas + (searchId - 1));
 }
